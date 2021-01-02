@@ -1,0 +1,27 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "description": "web frontend template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kukudeshiyi/template.git"
+  },
+  "author": "shiyi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kukudeshiyi/template/issues"
+  },
+  "homepage": "https://github.com/kukudeshiyi/template#readme",
+  "devDependencies": {
+    "webpack": "^5.11.1",
+    "webpack-dev-server": "^3.11.1"
+  },
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}
