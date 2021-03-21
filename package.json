@@ -72,6 +72,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
+      "sayHello",
       "./node_modules/.bin/eslint --fix",
       "git add"
     ]
