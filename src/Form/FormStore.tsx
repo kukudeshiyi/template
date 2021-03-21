@@ -1,5 +1,4 @@
 import Field from './Field';
-import Form from './Form';
 
 export interface Store {
   [key: string]: any;
