@@ -1,8 +1,8 @@
-import React from "react";
-import Form from "./Form";
-import useForm from "./useForm";
-import { Button, Input } from "antd";
-import Field from "./Field";
+import React from 'react';
+import Form from './Form';
+import useForm from './useForm';
+import { Button, Input } from 'antd';
+import Field from './Field';
 
 const FormTest = () => {
   const [form] = useForm();

@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import FormStore, { FormInstance } from "./FormStore";
+import { useRef } from 'react';
+import FormStore, { FormInstance } from './FormStore';
 
 const useForm = (form?: FormInstance) => {
   const formRef = useRef(form);

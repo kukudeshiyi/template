@@ -18,8 +18,6 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'react-app',
-    'plugin:@typescript-eslint/recommended',
     'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended',
   ],

@@ -1,5 +1,5 @@
 import Field from './Field';
-
+const a = 2;
 export interface Store {
   [key: string]: any;
 }

@@ -75,7 +75,6 @@
       "sayHello",
       "./node_modules/.bin/eslint --fix",
       "git add"
-    ],
-    "*.js": "eslint --cache --fix"
+    ]
   }
 }
