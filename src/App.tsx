@@ -1,4 +1,6 @@
-import React from "react";
+import React from 'react';
+import { FormTest } from './Form';
+import ErrorBoundary from './components/errorBoundary';
 interface PropsType {}
 
 interface StateType {}
@@ -7,6 +9,10 @@ export default class App extends React.Component<PropsType, StateType> {
     super(props);
   }
   render() {
-    return <div>ABCD</div>;
+    return (
+      <ErrorBoundary>
+        <FormTest />
+      </ErrorBoundary>
+    );
   }
 }

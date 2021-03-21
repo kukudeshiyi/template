@@ -22,6 +22,7 @@ module.exports = merge(common, {
     open: true,
     compress: true,
     hot: true,
+    // inline: true,
     port: 4000,
   },
 
