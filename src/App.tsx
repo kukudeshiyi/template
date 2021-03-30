@@ -12,6 +12,7 @@ export default class App extends React.Component<PropsType, StateType> {
     return (
       <ErrorBoundary>
         <FormTest />
+        <div className="">123</div>
       </ErrorBoundary>
     );
   }
