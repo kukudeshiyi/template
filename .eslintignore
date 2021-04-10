@@ -5,3 +5,4 @@
 /dist
 /.eslintrc.js
 /.stylelint.js
+/changelog.config.js
