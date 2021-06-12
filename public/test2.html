@@ -6,7 +6,6 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
     />
-    <title>Receipt</title>
     <link
       rel="stylesheet"
       href="https://static.test.mitra.shopee.co.id/dp-configuration/invoice/lib/main.css"
@@ -14,7 +13,7 @@
     />
     <link
       rel="preload"
-      href="https://apc-mitra-test-1255300759.cos.ap-singapore.myqcloud.com/apc-mitra/material/d3d36499-6a42-ad76-3846-76cb0fd1e014"
+      href="https://static.test.mitra.shopee.co.id/apc-mitra/material/d3d36499-6a42-ad76-3846-76cb0fd1e014"
       as="image"
     />
   </head>
@@ -26,9 +25,10 @@
         class="image-wrap"
       >
         <img
-          src="https://apc-mitra-test-1255300759.cos.ap-singapore.myqcloud.com/apc-mitra/material/d3d36499-6a42-ad76-3846-76cb0fd1e014"
+          src="https://static.test.mitra.shopee.co.id/apc-mitra/material/d3d36499-6a42-ad76-3846-76cb0fd1e014"
           alt=""
           class="image-type gray"
+          crossorigin="anonymous"
         />
       </div>
       <div
@@ -52,51 +52,9 @@
           padding-bottom: 0.5rem;
         "
         data-id=""
-        class="static-type"
-      >
-        <p>
-          Pembelian ini dapat digunakan di Google Play Store untuk membeli
-          produk game di Black Desert Mobile. Untuk menukar Voucher, masukkan
-          kode di Google Play Store atau <u>play.google.com</u>.
-        </p>
-      </div>
-      <div
-        style="
-          font-size: 1rem;
-          text-align: left;
-          padding-top: 0rem;
-          padding-bottom: 0.5rem;
-        "
-        data-id=""
-        class="static-type"
-      >
-        <p>Persyaratan:&nbsp;<u>g.co/playtermsid</u></p>
-      </div>
-      <div
-        style="
-          font-size: 1rem;
-          text-align: left;
-          padding-top: 0rem;
-          padding-bottom: 0.5rem;
-        "
-        data-id=""
-        class="static-type"
-      >
-        <p>Penukaran:&nbsp;<u>g.co/redeemplayid</u></p>
-      </div>
-      <div
-        style="
-          font-size: 1rem;
-          text-align: left;
-          padding-top: 0rem;
-          padding-bottom: 0.5rem;
-        "
-        data-id=""
         class="dynamic-type"
       >
-        <span class="only-value-content"
-          >black desert mobile powered by Google Play 55600</span
-        >
+        <span class="only-value-content">Google Play 20000</span>
       </div>
       <div
         style="
@@ -110,7 +68,7 @@
       >
         <span class="label">Waktu Dibuat</span>
         <span class="separator">:</span>
-        <span class="content">28/04/2021 16:39:46</span>
+        <span class="content">01/03/2021 14:54:48</span>
       </div>
       <div
         style="
@@ -151,7 +109,7 @@
         data-id=""
         class="dynamic-type"
       >
-        <span class="only-value-content">1619 6027 9247 1957 31</span>
+        <span class="only-value-content">1614 5852 9793 0957 31</span>
       </div>
       <div data-id="" style="padding-top: 0rem; padding-bottom: 0.5rem">
         <div class="dash-type"></div>
@@ -195,7 +153,7 @@
         class="dynamic-type"
       >
         <span class="label">No. Pesanan</span> <span class="separator">:</span>
-        <span class="content">APC1619602786069386082</span>
+        <span class="content">APC1614585288069470930</span>
       </div>
       <div
         style="
@@ -221,7 +179,7 @@
         class="dynamic-type"
       >
         <span class="label">No. Ref</span> <span class="separator">:</span>
-        <span class="content">1619602786843400069</span>
+        <span class="content">1614585288668600069</span>
       </div>
       <div data-id="" style="padding-top: 0rem; padding-bottom: 0.5rem">
         <div class="dash-type"></div>
@@ -238,10 +196,118 @@
         class="dynamic-type"
       >
         <span class="label">Total Bayar</span> <span class="separator">:</span>
-        <span class="content">Rp 55.600</span>
+        <span class="content">Rp 26.000</span>
       </div>
     </div>
     <iframe src="#" id="iframe" style="display: none"></iframe>
-    <script src="https://static.test.mitra.shopee.co.id/dp-configuration/invoice/lib/monitor.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+      var originalPostMessage = window.postMessage;
+      var patchedPostMessage = function (message, targetOrigin, transfer) {
+        originalPostMessage(message, targetOrigin, transfer);
+      };
+      patchedPostMessage.toString = function () {
+        return String(Object.hasOwnProperty).replace(
+          'hasOwnProperty',
+          'postMessage'
+        );
+      };
+      window.postMessage = patchedPostMessage;
+    </script>
+    <script>
+      (function () {
+        var iframe = document.getElementById('iframe');
+        var imageCount = document.images.length;
+        var failedImage = [];
+        var successfulImage = [];
+        var failed = false;
+        var SUCCESSFUL_URL =
+          'shopee://com.print.image.load/success?data=' +
+          encodeURIComponent('{}');
+        var FAILED_URL =
+          'shopee://com.print.image.load/failure?data=' +
+          encodeURIComponent('{}');
+
+        function sendMessage(msg, maxNum) {
+          var num = 0;
+          maxNum = maxNum || 20;
+          var interval = setInterval(() => {
+            if (num > maxNum) {
+              clearInterval(interval);
+            }
+            window.postMessage(msg);
+            num++;
+          }, 1000);
+        }
+
+        function getCapture() {
+          html2canvas(document.body, {
+            allowTaint: true,
+            useCORS: true,
+          }).then((canvas) => {
+            var imageUrl = canvas.toDataURL();
+            sendMessage('error');
+          });
+        }
+
+        var timer = setTimeout(function () {
+          if (successfulImage.length !== imageCount) {
+            sendMessage('error');
+            iframe.src = FAILED_URL;
+            failed = true;
+          }
+        }, 7000);
+
+        if (imageCount === 0) {
+          clearTimeout(timer);
+          getCapture();
+          iframe.src = SUCCESSFUL_URL;
+        }
+
+        for (var index = 0; index < imageCount; index++) {
+          const imageOnLoad = function () {
+            if (failed) return;
+            successfulImage.push(image);
+            if (successfulImage.length === imageCount) {
+              clearTimeout(timer);
+              getCapture();
+              iframe.src = SUCCESSFUL_URL;
+            }
+          };
+          var image = document.images[index];
+          if (image.complete) imageOnLoad();
+          image.onload = imageOnLoad;
+          image.onerror = function () {
+            sendMessage('error');
+            iframe.src = FAILED_URL;
+            failedImage.push(image);
+          };
+        }
+        var ua = navigator.userAgent;
+        function isAndroid() {
+          return /Android/i.test(ua);
+        }
+        function isIos() {
+          return /iPhone|iPad|iPod|iOS/i.test(ua);
+        }
+        function isWeb() {
+          return /windows|win32|win64|wow32|wow64|macintosh|macintel|x11/i.test(
+            ua
+          );
+        }
+        function getPlatform() {
+          if (isWeb()) return 'web';
+          if (isAndroid()) return 'android';
+          if (isIos()) return 'ios';
+          return '';
+        }
+        var page = document.querySelector('#container');
+        var classList = page.getAttribute('class');
+        page.setAttribute(
+          'class',
+          classList ? classList + ' ' + getPlatform() : getPlatform()
+        );
+      })();
+    </script>
   </body>
 </html>

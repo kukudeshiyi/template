@@ -6,3 +6,5 @@
 /.eslintrc.js
 /.stylelint.js
 /changelog.config.js
+/src/babel
+/src/demo

@@ -242,6 +242,20 @@
       </div>
     </div>
     <iframe src="#" id="iframe" style="display: none"></iframe>
+    <script>
+      var originalPostMessage = window.postMessage;
+      var patchedPostMessage = function (message, targetOrigin, transfer) {
+        originalPostMessage(message, targetOrigin, transfer);
+      };
+      patchedPostMessage.toString = function () {
+        return String(Object.hasOwnProperty).replace(
+          'hasOwnProperty',
+          'postMessage'
+        );
+      };
+      window.postMessage = patchedPostMessage;
+    </script>
+    <script src="https://static.test.mitra.shopee.co.id/dp-configuration/invoice/lib/html2canvas.js"></script>
     <script src="https://static.test.mitra.shopee.co.id/dp-configuration/invoice/lib/monitor.js"></script>
   </body>
 </html>
