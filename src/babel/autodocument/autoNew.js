@@ -118,22 +118,20 @@ const parseEntryFile = async (entryFilePath) => {
 // parseEntryFile(entryFile);
 
 const writeDocument = (componentNames, documents) => {
-  let docText = '# Components\n---\n';
+  let docText = '# Components\n';
   // 生成目录
   componentNames.forEach((componentName, index) => {
     if (componentName) {
       docText += `<a href="#doc${index}"><font size=2 color=#00f>${
         index + 1
-      }、${componentName}</font></a>\n`;
+      }、${componentName}</font></a>\n\n`;
     }
   });
 
   componentNames.forEach((componentName, index) => {
     const document = documents[index];
     if (componentName) {
-      docText += `## <a id="doc${index}">${
-        index + 1
-      }、${componentName}</a>\n---\n`;
+      docText += `## <a id="doc${index}">${index + 1}、${componentName}</a>\n`;
       docText += tableHead;
       document.forEach((item) => {
         docText += `| ${item[0]} | ${item[1]} |\n`;
