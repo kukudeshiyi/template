@@ -10,7 +10,8 @@
   "bin": {
     "sayHello": "bin/sayHello",
     "sayBye": "bin/sayBye",
-    "sayFuck": "bin/sayFuck"
+    "sayFuck": "bin/sayFuck",
+    "autoDocument": "bin/autoDocument"
   },
   "repository": {
     "type": "git",
