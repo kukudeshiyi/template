@@ -3,12 +3,12 @@ import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../constants';
 import { scaleSize, setSpText2 } from '@mitra/rn-sdk';
 
-type PropType = {
+interface PropsType {
   /** 标题 */
   title: string;
-};
+}
 
-export default memo(function ({ title }: PropType) {
+export default memo(function ({ title }: PropsType) {
   return (
     <View style={styles.lineBreak}>
       <View style={styles.line} />

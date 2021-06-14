@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { scaleSize, setSpText2 } from '@mitra/rn-sdk';
 
-interface PropType {
+interface PropsType {
   /** 标题 */
   title: string;
   /** 显示返回按钮 */
@@ -27,7 +27,7 @@ interface PropType {
   platformTitle?: boolean;
 }
 
-function Navbar(props: PropType) {
+function Navbar(props: PropsType) {
   const {
     title,
     showBack = true,

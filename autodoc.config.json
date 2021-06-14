@@ -1,6 +1,6 @@
 {
   "entryFile": "./autoDocTestDirectory/index.ts",
-  "markown": {
+  "markdown": {
     "headerFile": "./markdown/header.md",
     "footerFile": "./markdown/footer.md"
   }

@@ -6,6 +6,8 @@ const path = require('path');
 
 const tableHead = '| Prop | Explanation |\n| :--: | :--: |\n';
 
+const allowFileExtensions = ['ts', 'tsx', 'js', 'jsx'];
+
 // 解析注释
 const parseComment = (commentStr) => {
   if (!commentStr) {
@@ -28,19 +30,92 @@ const readFile = (options) => {
     });
   });
 };
-
-// 分析路径补全路径
-const parsePath = (filePath) => {
-  const parseResult = path.parse(filePath);
-  if (parseResult) {
-    if (parse.base) {
-    }
-  }
+// 判断当前路径是不是有效路径
+const getIsValidPath = (filePath) => {
+  return new Promise((res, rej) => {
+    fs.access(filePath, (err) => {
+      if (err) {
+        res(false);
+      }
+      return res(true);
+    });
+  });
+};
+// 判断当前路径指向的是文件还是文件夹
+const getIsDirectory = (filePath) => {
+  return new Promise((res, rej) => {
+    fs.stat(filePath, (err, stat) => {
+      if (err) {
+        rej(err);
+      }
+      res(stat.isDirectory());
+    });
+  });
 };
 
-const getComment = async (filePath, rootPath) => {
+// 补全路径
+const filePathAddExtension = async (options) => {
+  const { allowExtensions = [], filePath } = options;
+  let flag = false,
+    result = filePath;
+  for (const extension of allowExtensions) {
+    const isValidPath = await getIsValidPath(`${filePath}.${extension}`);
+    if (isValidPath) {
+      flag = true;
+      result = `${filePath}.${extension}`;
+      break;
+    }
+  }
+  return flag ? result : Promise.reject('error');
+};
+
+// 分析路径补全路径
+const handlePath = async (options) => {
+  const { currentExecPath, filePath } = options;
+  // 分析是不是绝对路径
+  let absoluteFilePath = filePath;
+  const parseResult = path.parse(filePath);
+  if (parseResult.root !== '/') {
+    absoluteFilePath = path.resolve(currentExecPath, absoluteFilePath);
+  }
+
+  // 补全路径
+  const isValidPath = await getIsValidPath(absoluteFilePath);
+
+  // 判定用户只写了文件名未写后缀
+  if (!isValidPath) {
+    try {
+      absoluteFilePath = await filePathAddExtension({
+        allowExtensions: allowFileExtensions,
+        filePath: absoluteFilePath,
+      });
+      return absoluteFilePath;
+    } catch (e) {
+      console.warn('1');
+      return Promise.reject(e);
+    }
+  }
+
+  // 如果是文件夹默认补全index文件
+  try {
+    const isDirectory = await getIsDirectory(absoluteFilePath);
+    if (isDirectory) {
+      absoluteFilePath = await filePathAddExtension({
+        allowExtensions: allowFileExtensions,
+        filePath: `${absoluteFilePath}/index`,
+      });
+      return absoluteFilePath;
+    }
+  } catch (e) {
+    console.warn('2');
+    return Promise.reject('error');
+  }
+  return absoluteFilePath;
+};
+
+const getComment = async (filePath) => {
   const code = await readFile({
-    filePath: path.resolve(rootPath, filePath),
+    filePath,
     encode: 'utf8',
   });
 
@@ -83,12 +158,20 @@ const getComment = async (filePath, rootPath) => {
 };
 
 // 解析入口文件获取组件路径
-const parseEntryFile = async (entryFilePath, rootPath) => {
+const parseEntryFile = async (entryFilePath, currentExecPath) => {
+  // 处理 entry file path ，增加容错性
+  const handleEntryFilePath = await handlePath({
+    currentExecPath,
+    filePath: entryFilePath,
+  }).catch((e) => {
+    return console.warn('can not find entry file');
+  });
+
   const code = await readFile({
-    filePath: path.resolve(rootPath, entryFilePath),
+    filePath: handleEntryFilePath,
     encode: 'utf8',
   }).catch((e) => {
-    console.log('read entry file error', e);
+    return console.warn('read entry file error', e);
   });
 
   const ast = parser.parse(code, {
@@ -101,22 +184,24 @@ const parseEntryFile = async (entryFilePath, rootPath) => {
 
   traverse(ast, {
     ExportNamedDeclaration(path, state) {
-      // TODO:优化判断路径
-      let componentPath = path?.node?.source.value;
-      if (!componentPath.includes('index')) {
-        componentPath = `${componentPath}/index`;
-      }
-      if (!componentPath.includes('tsx')) {
-        componentPath = `${componentPath}.tsx`;
-      }
       componentNames.push(path?.node?.specifiers?.[0]?.exported.name);
-      componentPaths.push(componentPath);
+      componentPaths.push(path?.node?.source.value);
     },
   });
 
+  // 校正组件路径
+  for (let i = 0; i < componentPaths.length; i++) {
+    componentPaths[i] = await handlePath({
+      currentExecPath: path.resolve(handleEntryFilePath, '../'),
+      filePath: componentPaths[i],
+    }).catch((e) => {
+      console.warn('can not resolve conponents path');
+    });
+  }
+
   const documents = await Promise.all(
     componentPaths.map((componentPath) => {
-      return getComment(componentPath, rootPath);
+      return getComment(componentPath);
     })
   );
 
@@ -128,9 +213,11 @@ const parseEntryFile = async (entryFilePath, rootPath) => {
 
 const writeDocument = async (componentNames, documents, markdown, rootPath) => {
   let docText = '';
+  // TODO: 配置文件写错怎么办
+  // TODO: 校验 markdown 文件是否存在
   if (markdown.headerFile) {
     const headerContent = await readFile({
-      filePath: Path.resolve(rootPath, markdown.headerFile),
+      filePath: path.resolve(rootPath, markdown.headerFile),
       encode: 'utf8',
     }).catch((e) => {
       console.log('read markdown header file error', e);
@@ -162,7 +249,7 @@ const writeDocument = async (componentNames, documents, markdown, rootPath) => {
   // 尾部
   if (markdown.footerFile) {
     const footerContent = await readFile({
-      filePath: Path.resolve(rootPath, markdown.footerFile),
+      filePath: path.resolve(rootPath, markdown.footerFile),
       encode: 'utf8',
     }).catch((e) => {
       console.log('read markdown footer file error', e);
